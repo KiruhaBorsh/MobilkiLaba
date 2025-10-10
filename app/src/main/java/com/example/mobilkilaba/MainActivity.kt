@@ -62,6 +62,7 @@ fun DotProductScreen(modifier: Modifier = Modifier) {
 
         Button(onClick = {
             val n = sizeText.toIntOrNull()
+            //check for correct input
             if (n == null || n <= 0) {
                 resultText = "Введите корректную размерность (>0)"
                 return@Button
