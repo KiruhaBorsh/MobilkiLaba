@@ -34,7 +34,7 @@ fun RecipesScreen(
     val recipes by recipeRepository.recipes.collectAsState(initial = emptyList())
     var searchQuery by remember { mutableStateOf("") }
     var showFavoritesOnly by remember { mutableStateOf(false) }
-
+//Фильтрация рецептов по поисковому запросу и фильтру избранных
     val filteredRecipes = recipes.filter { recipe ->
         val matchesSearch = recipe.title.contains(searchQuery, ignoreCase = true) ||
                 recipe.description.contains(searchQuery, ignoreCase = true) ||
@@ -130,7 +130,7 @@ fun RecipesScreen(
         }
     }
 }
-
+//Карточка рецепта для отображения в списке
 @Composable
 fun RecipeCard(
     recipe: Recipe,
