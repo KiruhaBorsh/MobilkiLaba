@@ -337,7 +337,7 @@ fun AddEditRecipeScreen(
         }
     }
 }
-
+//Валидация данных рецепта перед сохранением
 private fun isValidRecipe(
     title: String,
     description: String,

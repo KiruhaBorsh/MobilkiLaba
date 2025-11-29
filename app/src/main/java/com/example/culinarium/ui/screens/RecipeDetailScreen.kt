@@ -172,7 +172,7 @@ fun RecipeInfoCard(recipe: Recipe) {
         }
     }
 }
-
+//Карточка со списком ингредиентов рецепта
 @Composable
 fun IngredientsCard(recipe: Recipe) {
     Card(

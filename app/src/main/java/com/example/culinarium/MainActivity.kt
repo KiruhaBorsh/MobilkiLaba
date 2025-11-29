@@ -42,6 +42,7 @@ fun RecipeApp(
     recipeRepository: RecipeRepository,
     onLanguageChanged: () -> Unit = {}
 ) {
+    //Управление состоянием навигации между экранами
     val context = LocalContext.current
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Recipes) }
     var selectedRecipeId by remember { mutableStateOf<String?>(null) }
