@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Кулинариум</string>
+    
+    <!-- Главный экран -->
+    <string name="recipes_title">Рецепты</string>
+    <string name="add_recipe">Добавить рецепт</string>
+    <string name="search_hint">Поиск рецептов...</string>
+    <string name="no_recipes">Нет рецептов</string>
+    <string name="no_recipes_description">Добавьте свой первый рецепт</string>
+    
+    <!-- Детали рецепта -->
+    <string name="ingredients">Ингредиенты</string>
+    <string name="instructions">Инструкции</string>
+    <string name="cooking_time">Время приготовления</string>
+    <string name="servings">Порций</string>
+    <string name="difficulty">Сложность</string>
+    <string name="category">Категория</string>
+    <string name="minutes">мин</string>
+    <string name="edit_recipe">Редактировать</string>
+    <string name="delete_recipe">Удалить</string>
+    <string name="add_to_favorites">В избранное</string>
+    <string name="remove_from_favorites">Убрать из избранного</string>
+    
+    <!-- Добавление/редактирование рецепта -->
+    <string name="new_recipe">Новый рецепт</string>
+    <string name="edit_recipe_title">Редактировать рецепт</string>
+    <string name="recipe_title">Название рецепта</string>
+    <string name="recipe_description">Описание</string>
+    <string name="add_ingredient">Добавить ингредиент</string>
+    <string name="add_instruction">Добавить шаг</string>
+    <string name="save_recipe">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    
+    <!-- Сложность -->
+    <string name="difficulty_easy">Легко</string>
+    <string name="difficulty_medium">Средне</string>
+    <string name="difficulty_hard">Сложно</string>
+    
+    <!-- Категории -->
+    <string name="category_breakfast">Завтрак</string>
+    <string name="category_lunch">Обед</string>
+    <string name="category_dinner">Ужин</string>
+    <string name="category_dessert">Десерт</string>
+    <string name="category_snack">Закуска</string>
+    <string name="category_beverage">Напиток</string>
+    
+    <!-- Общие -->
+    <string name="confirm_delete">Подтвердить удаление</string>
+    <string name="delete_recipe_message">Вы уверены, что хотите удалить этот рецепт?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="error">Ошибка</string>
+    <string name="success">Успешно</string>
+</resources>
