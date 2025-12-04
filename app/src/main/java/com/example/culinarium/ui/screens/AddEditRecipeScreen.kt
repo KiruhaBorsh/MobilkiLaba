@@ -21,6 +21,7 @@ import com.example.culinarium.R
 import com.example.culinarium.data.Recipe
 import com.example.culinarium.data.Difficulty
 import com.example.culinarium.data.Category
+import com.example.culinarium.ui.components.LanguageToggleButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +30,8 @@ fun AddEditRecipeScreen(
     onBackClick: () -> Unit,
     onSaveClick: (Recipe) -> Unit,
     recipe: Recipe?,
-    onToggleLanguage: () -> Unit
+    onToggleLanguage: () -> Unit,
+    languageToggleLabel: String
 ) {
     var title by remember { mutableStateOf(recipe?.title ?: "") }
     var description by remember { mutableStateOf(recipe?.description ?: "") }
@@ -53,11 +55,17 @@ fun AddEditRecipeScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.navigate_back)
+                        )
                     }
                 },
                 actions = {
-                    TextButton(onClick = onToggleLanguage) { Text("EN") }
+                    LanguageToggleButton(
+                        label = languageToggleLabel,
+                        onToggle = onToggleLanguage
+                    )
                     TextButton(
                         onClick = {
                             if (isValidRecipe(title, description, ingredients, instructions, cookingTime, servings)) {
@@ -244,7 +252,7 @@ fun AddEditRecipeScreen(
                                 this[index] = newValue
                             }
                         },
-                        label = { Text("Ингредиент ${index + 1}") },
+                        label = { Text(stringResource(R.string.ingredient_number, index + 1)) },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
@@ -258,7 +266,10 @@ fun AddEditRecipeScreen(
                                 }
                             }
                         ) {
-                            Icon(Icons.Default.Delete, contentDescription = "Удалить")
+                            Icon(
+                                Icons.Default.Delete,
+                                contentDescription = stringResource(R.string.delete_recipe)
+                            )
                         }
                     }
                 }
@@ -299,7 +310,7 @@ fun AddEditRecipeScreen(
                                 this[index] = newValue
                             }
                         },
-                        label = { Text("Шаг ${index + 1}") },
+                        label = { Text(stringResource(R.string.instruction_number, index + 1)) },
                         modifier = Modifier.weight(1f),
                         minLines = 2,
                         keyboardOptions = KeyboardOptions(
@@ -314,7 +325,10 @@ fun AddEditRecipeScreen(
                                 }
                             }
                         ) {
-                            Icon(Icons.Default.Delete, contentDescription = "Удалить")
+                            Icon(
+                                Icons.Default.Delete,
+                                contentDescription = stringResource(R.string.delete_recipe)
+                            )
                         }
                     }
                 }

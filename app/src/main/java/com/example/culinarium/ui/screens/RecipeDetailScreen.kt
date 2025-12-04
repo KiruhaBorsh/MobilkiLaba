@@ -17,6 +17,7 @@ import com.example.culinarium.data.Recipe
 import com.example.culinarium.data.RecipeRepository
 import com.example.culinarium.data.Difficulty
 import com.example.culinarium.data.Category
+import com.example.culinarium.ui.components.LanguageToggleButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +27,8 @@ fun RecipeDetailScreen(
     onBackClick: () -> Unit,
     onDeleteClick: (String) -> Unit,
     recipeRepository: RecipeRepository,
-    onToggleLanguage: () -> Unit
+    onToggleLanguage: () -> Unit,
+    languageToggleLabel: String
 ) {
     val recipe by remember(recipeId) {
         derivedStateOf { recipeRepository.getRecipeById(recipeId) }
@@ -37,7 +39,7 @@ fun RecipeDetailScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Рецепт не найден")
+            Text(stringResource(R.string.recipe_not_found))
         }
         return
     }
@@ -50,11 +52,17 @@ fun RecipeDetailScreen(
                 title = { Text(recipe!!.title) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.navigate_back)
+                        )
                     }
                 },
                 actions = {
-                    TextButton(onClick = onToggleLanguage) { Text("EN") }
+                    LanguageToggleButton(
+                        label = languageToggleLabel,
+                        onToggle = onToggleLanguage
+                    )
                     IconButton(
                         onClick = { recipeRepository.toggleFavorite(recipeId) }
                     ) {

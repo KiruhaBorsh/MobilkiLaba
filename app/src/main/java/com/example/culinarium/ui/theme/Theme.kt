@@ -13,38 +13,44 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Orange80,
-    secondary = OrangeGrey80,
-    tertiary = Green80,
-    background = Color(0xFF121212),
-    surface = Color(0xFF1E1E1E),
+    primary = CoralPrimary,
+    secondary = SagePrimary,
+    tertiary = AccentAmber,
+    background = DarkBackground,
+    surface = DarkBackground.copy(alpha = 0.95f),
+    surfaceVariant = SageSecondary.copy(alpha = 0.25f),
     onPrimary = Color.Black,
-    onSecondary = Color.Black,
+    onSecondary = Color.White,
     onTertiary = Color.Black,
     onBackground = Color.White,
     onSurface = Color.White,
-    error = WarmRed
+    onSurfaceVariant = Color(0xFFE6D1C3),
+    outline = SageSecondary.copy(alpha = 0.4f),
+    error = AccentBerry
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Orange40,
-    secondary = OrangeGrey40,
-    tertiary = Green40,
-    background = Color(0xFFFFF8F5),
-    surface = Color(0xFFFFF8F5),
+    primary = CoralPrimary,
+    secondary = SagePrimary,
+    tertiary = AccentAmber,
+    background = CreamBackground,
+    surface = SandSurface,
+    surfaceVariant = CoralSecondary.copy(alpha = 0.3f),
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    error = WarmRed
+    onTertiary = Color.Black,
+    onBackground = DeepCocoa,
+    onSurface = DeepCocoa,
+    onSurfaceVariant = DeepCocoa.copy(alpha = 0.75f),
+    outline = DeepCocoa.copy(alpha = 0.2f),
+    error = AccentBerry
 )
 
 @Composable
 fun CulinariumTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
