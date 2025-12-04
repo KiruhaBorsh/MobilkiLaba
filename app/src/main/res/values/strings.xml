@@ -7,6 +7,8 @@
     <string name="search_hint">Поиск рецептов...</string>
     <string name="no_recipes">Нет рецептов</string>
     <string name="no_recipes_description">Добавьте свой первый рецепт</string>
+    <string name="recipes_discover_message">Найдите вдохновение и откройте новые вкусы</string>
+    <string name="filter_favorites_only">Только избранное</string>
     
     <!-- Детали рецепта -->
     <string name="ingredients">Ингредиенты</string>
@@ -20,6 +22,7 @@
     <string name="delete_recipe">Удалить</string>
     <string name="add_to_favorites">В избранное</string>
     <string name="remove_from_favorites">Убрать из избранного</string>
+    <string name="recipe_not_found">Рецепт не найден</string>
     
     <!-- Добавление/редактирование рецепта -->
     <string name="new_recipe">Новый рецепт</string>
@@ -30,6 +33,8 @@
     <string name="add_instruction">Добавить шаг</string>
     <string name="save_recipe">Сохранить</string>
     <string name="cancel">Отмена</string>
+    <string name="ingredient_number">Ингредиент %1$d</string>
+    <string name="instruction_number">Шаг %1$d</string>
     
     <!-- Сложность -->
     <string name="difficulty_easy">Легко</string>
@@ -51,4 +56,5 @@
     <string name="no">Нет</string>
     <string name="error">Ошибка</string>
     <string name="success">Успешно</string>
+    <string name="navigate_back">Назад</string>
 </resources>

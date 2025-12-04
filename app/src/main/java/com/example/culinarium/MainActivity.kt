@@ -3,14 +3,13 @@ package com.example.culinarium
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.os.LocaleListCompat
 import com.example.culinarium.data.Recipe
 import com.example.culinarium.data.RecipeRepository
 import com.example.culinarium.ui.screens.*
@@ -19,6 +18,12 @@ import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     private val recipeRepository = RecipeRepository()
+    
+    override fun attachBaseContext(newBase: Context) {
+        val locale = getSavedLocale(newBase)
+        val contextWithLocale = updateLocale(newBase, locale)
+        super.attachBaseContext(contextWithLocale)
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,20 +48,23 @@ fun RecipeApp(
     onLanguageChanged: () -> Unit = {}
 ) {
     //Управление состоянием навигации между экранами
+    val configuration = LocalConfiguration.current
     val context = LocalContext.current
+    val languageToggleLabel = remember(configuration) {
+        getLanguageToggleLabel(configuration)
+    }
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Recipes) }
     var selectedRecipeId by remember { mutableStateOf<String?>(null) }
     var editingRecipe by remember { mutableStateOf<Recipe?>(null) }
     
     fun toggleLanguage() {
-        val current = AppCompatDelegate.getApplicationLocales()
-        val isRu = current.isEmpty || current[0]?.language == "ru"
-        val newLocales = if (isRu) {
-            LocaleListCompat.create(Locale("en", "US"))
+        val currentLocale = getSavedLocale(context)
+        val newLocale = if (currentLocale.language == "ru") {
+            Locale("en")
         } else {
-            LocaleListCompat.create(Locale("ru", "RU"))
+            Locale("ru")
         }
-        AppCompatDelegate.setApplicationLocales(newLocales)
+        saveLocale(context, newLocale)
         onLanguageChanged()
     }
 
@@ -72,7 +80,8 @@ fun RecipeApp(
                     currentScreen = Screen.AddEditRecipe
                 },
                 recipeRepository = recipeRepository,
-                onToggleLanguage = { toggleLanguage() }
+                onToggleLanguage = { toggleLanguage() },
+                languageToggleLabel = languageToggleLabel
             )
         }
         Screen.RecipeDetail -> {
@@ -91,7 +100,8 @@ fun RecipeApp(
                         currentScreen = Screen.Recipes
                     },
                     recipeRepository = recipeRepository,
-                    onToggleLanguage = { toggleLanguage() }
+                    onToggleLanguage = { toggleLanguage() },
+                    languageToggleLabel = languageToggleLabel
                 )
             }
         }
@@ -110,10 +120,46 @@ fun RecipeApp(
                     currentScreen = Screen.Recipes
                 },
                 recipe = editingRecipe,
-                onToggleLanguage = { toggleLanguage() }
+                onToggleLanguage = { toggleLanguage() },
+                languageToggleLabel = languageToggleLabel
             )
         }
     }
+}
+
+private const val PREFS_NAME = "settings"
+private const val KEY_LANGUAGE = "language"
+
+private fun getSavedLocale(context: Context): Locale {
+    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    val lang = prefs.getString(KEY_LANGUAGE, null)
+    return if (lang.isNullOrBlank()) {
+        Locale.getDefault()
+    } else {
+        Locale(lang)
+    }
+}
+
+private fun saveLocale(context: Context, locale: Locale) {
+    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    prefs.edit().putString(KEY_LANGUAGE, locale.language).apply()
+}
+
+private fun updateLocale(context: Context, locale: Locale): Context {
+    Locale.setDefault(locale)
+    val config = Configuration(context.resources.configuration)
+    config.setLocale(locale)
+    return context.createConfigurationContext(config)
+}
+
+private fun getLanguageToggleLabel(configuration: Configuration): String {
+    val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        configuration.locales[0]
+    } else {
+        @Suppress("DEPRECATION")
+        configuration.locale
+    }
+    return if (locale?.language == "ru") "EN" else "RU"
 }
 
 sealed class Screen {

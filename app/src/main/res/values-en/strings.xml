@@ -7,6 +7,8 @@
     <string name="search_hint">Search recipes...</string>
     <string name="no_recipes">No recipes</string>
     <string name="no_recipes_description">Add your first recipe</string>
+    <string name="recipes_discover_message">Get inspired and discover new flavors</string>
+    <string name="filter_favorites_only">Favorites only</string>
     
     <!-- Recipe details -->
     <string name="ingredients">Ingredients</string>
@@ -20,6 +22,7 @@
     <string name="delete_recipe">Delete</string>
     <string name="add_to_favorites">Add to favorites</string>
     <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="recipe_not_found">Recipe not found</string>
     
     <!-- Add/Edit recipe -->
     <string name="new_recipe">New Recipe</string>
@@ -30,6 +33,8 @@
     <string name="add_instruction">Add step</string>
     <string name="save_recipe">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="ingredient_number">Ingredient %1$d</string>
+    <string name="instruction_number">Step %1$d</string>
     
     <!-- Difficulty -->
     <string name="difficulty_easy">Easy</string>
@@ -51,5 +56,6 @@
     <string name="no">No</string>
     <string name="error">Error</string>
     <string name="success">Success</string>
+    <string name="navigate_back">Back</string>
 </resources>
 

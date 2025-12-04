@@ -1,5 +1,7 @@
 package com.example.culinarium.ui.screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -22,6 +25,8 @@ import com.example.culinarium.data.Recipe
 import com.example.culinarium.data.RecipeRepository
 import com.example.culinarium.data.Difficulty
 import com.example.culinarium.data.Category
+import com.example.culinarium.ui.components.LanguageToggleButton
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +34,8 @@ fun RecipesScreen(
     onRecipeClick: (String) -> Unit,
     onAddRecipeClick: () -> Unit,
     recipeRepository: RecipeRepository,
-    onToggleLanguage: () -> Unit
+    onToggleLanguage: () -> Unit,
+    languageToggleLabel: String
 ) {
     val recipes by recipeRepository.recipes.collectAsState(initial = emptyList())
     var searchQuery by remember { mutableStateOf("") }
@@ -43,20 +49,29 @@ fun RecipesScreen(
         matchesSearch && matchesFavorites
     }
 
+    val colorScheme = MaterialTheme.colorScheme
+    val gradientBackground = remember(colorScheme) {
+        Brush.verticalGradient(
+            colors = listOf(
+                colorScheme.primary.copy(alpha = 0.12f),
+                colorScheme.background
+            )
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.recipes_title)) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
+                ),
                 actions = {
-                    TextButton(onClick = onToggleLanguage) {
-                        Text("EN")
-                    }
-                    IconButton(onClick = { showFavoritesOnly = !showFavoritesOnly }) {
-                        Icon(
-                            imageVector = if (showFavoritesOnly) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = stringResource(R.string.add_to_favorites)
-                        )
-                    }
+                    LanguageToggleButton(
+                        label = languageToggleLabel,
+                        onToggle = onToggleLanguage
+                    )
                 }
             )
         },
@@ -69,61 +84,97 @@ fun RecipesScreen(
             }
         }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(gradientBackground)
                 .padding(paddingValues)
         ) {
-            // Поиск
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                placeholder = { Text(stringResource(R.string.search_hint)) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Search
-                )
-            )
-
-            // Список рецептов
-            if (filteredRecipes.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(32.dp),
+                    tonalElevation = 4.dp,
+                    shadowElevation = 4.dp,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.no_recipes),
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = stringResource(R.string.recipes_discover_message),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.SemiBold
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = stringResource(R.string.no_recipes_description),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        Spacer(modifier = Modifier.height(12.dp))
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text(stringResource(R.string.search_hint)) },
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                            singleLine = true,
+                            shape = RoundedCornerShape(24.dp),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Search
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        FilterChip(
+                            selected = showFavoritesOnly,
+                            onClick = { showFavoritesOnly = !showFavoritesOnly },
+                            label = { Text(stringResource(R.string.filter_favorites_only)) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = if (showFavoritesOnly) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                    contentDescription = null
+                                )
+                            },
+                            shape = RoundedCornerShape(20.dp)
                         )
                     }
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(filteredRecipes) { recipe ->
-                        RecipeCard(
-                            recipe = recipe,
-                            onClick = { onRecipeClick(recipe.id) },
-                            onToggleFavorite = { recipeRepository.toggleFavorite(recipe.id) }
-                        )
+
+                if (filteredRecipes.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = stringResource(R.string.no_recipes),
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(R.string.no_recipes_description),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(filteredRecipes) { recipe ->
+                            RecipeCard(
+                                recipe = recipe,
+                                onClick = { onRecipeClick(recipe.id) },
+                                onToggleFavorite = { recipeRepository.toggleFavorite(recipe.id) }
+                            )
+                        }
                     }
                 }
             }
@@ -142,7 +193,12 @@ fun RecipeCard(
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         onClick = onClick,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
